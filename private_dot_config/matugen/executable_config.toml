@@ -25,7 +25,7 @@ output_path = "~/.local/state/lastwall"
 [templates.hyprland]
 input_path = "./templates/hyprland.conf"
 output_path = "~/.config/hypr/colors/matugen-hyprland.conf"
-post_hook = "hyprctl reload"
+post_hook = "command -v hyprctl >/dev/null && pgrep -x Hyprland >/dev/null && hyprctl reload"
 
 [templates.hyprlock]
 input_path = "./templates/hyprlock.conf"
@@ -55,7 +55,7 @@ output_path = "~/.config/yazi/theme.toml"
 [templates.kitty]
 input_path  = "./templates/kitty.conf"
 output_path = "~/.config/kitty/matugen.conf"
-post_hook   = "pkill -SIGUSR1 kitty"
+post_hook   = "command -v kitty >/dev/null && pkill -SIGUSR1 kitty"
 
 [templates.ghostty]
 input_path = "./templates/ghostty"
@@ -68,7 +68,7 @@ output_path = "~/.config/ghostty/themes/matugen"
 [templates.waybar]
 input_path = "./templates/colors.css"
 output_path = "~/.config/waybar/matugen.css"
-post_hook = "killall -SIGUSR2 waybar"
+post_hook = "command -v waybar >/dev/null && killall -SIGUSR2 waybar"
 
 [templates.wlogout]
 input_path = "./templates/colors.css"
@@ -89,7 +89,7 @@ output_path = "~/.config/rofi/matugen.rasi"
 [templates.mako]
 input_path = "./templates/mako"
 output_path = "~/.config/mako/config"
-post_hook = "pidof mako >/dev/null && pkill mako && mako >/dev/null 2>&1 &"
+post_hook = "command -v mako >/dev/null && pidof mako >/dev/null && pkill mako && mako >/dev/null 2>&1 &"
 
 # [templates.avizo]
 # input_path = "./templates/avizo.ini"
@@ -98,7 +98,7 @@ post_hook = "pidof mako >/dev/null && pkill mako && mako >/dev/null 2>&1 &"
 [templates.pywalfox]
 input_path = "./templates/colors.json"
 output_path = "~/.cache/wal/colors.json"
-post_hook = "pywalfox update"
+post_hook = "command -v pywalfox >/dev/null && pywalfox update"
 
 [templates.rmpc]
 input_path = "./templates/rmpc.ron"
@@ -124,7 +124,7 @@ output_path = "~/.local/share/nvim/lazy/base46/lua/base46/themes/matugen.lua"
 [templates.btop]
 input_path = "./templates/btop.theme"
 output_path = "~/.config/btop/themes/matugen.theme"
-post_hook = "pgrep -x btop >/dev/null && pkill -USR2 -x btop || :"
+post_hook = "command -v btop >/dev/null && pgrep -x btop >/dev/null && pkill -USR2 -x btop || :"
 
 [templates.qt5ct]
 input_path = "./templates/qtct.conf"
@@ -137,12 +137,12 @@ output_path = "~/.config/qt6ct/colors/matugen.conf"
 [templates.kvconfig]
 input_path = "./templates/kvantum/kvantum.kvconfig"
 output_path = "~/.config/Kvantum/matugen/matugen.kvconfig"
-post_hook = "kvantummanager --set matugen"
+post_hook = "command -v kvantummanager >/dev/null && kvantummanager --set matugen"
 
 [templates.kvsvg]
 input_path = "./templates/kvantum/kvantum.svg"
 output_path = "~/.config/Kvantum/matugen/matugen.svg"
-post_hook = "kvantummanager --set matugen"
+post_hook = "command -v kvantummanager >/dev/null && kvantummanager --set matugen"
 
 [templates.cava]
 input_path = "./templates/cava.ini"
@@ -176,4 +176,4 @@ colors_to_compare = [
     { name = "cat-mocha-blue", color = "#89b4fa" },
     { name = "cat-mocha-lavender", color = "#b4befe" },
 ]
-post_hook = "papirus-folders -C {{closest_color}} -t Papirus-Dark"
+post_hook = "command -v papirus-folders >/dev/null && papirus-folders -C {{closest_color}} -t Papirus-Dark"
