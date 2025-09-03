@@ -1,0 +1,26 @@
+{
+    "extractor": {
+        "base-directory": "~/Downloads/Gallery-DL"
+    },
+
+    "downloader": {
+        "part-directory": "/tmp/.download"
+    },
+
+    "output": {
+
+    },
+
+    "postprocessor": {
+        "name": "metadata",
+        "event": "post",
+        "filename": "{id} {title}.txt",
+
+        "#": "write text content and external URLs",
+        "mode": "custom",
+        "format": "{content}\n{embed[url]:?/\n/}",
+
+        "#": "only write file if there is an external link present",
+        "filter": "embed.get('url') or re.search(r'(?i)(gigafile|xgf|1drv|mediafire|mega|google|drive)', content)"
+    }
+}

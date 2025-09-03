@@ -1,0 +1,17 @@
+font-family = CaskaydiaCove Nerd Font
+font-size = 14
+cursor-style = underline
+cursor-style-blink = true
+mouse-scroll-multiplier = 2
+bold-is-bright = true
+window-padding-x = 10
+window-padding-y = 10
+window-height = 30
+window-width = 120
+theme = matugen
+background-opacity = 0.9
+resize-overlay = never
+shell-integration = none
+confirm-close-surface = false
+alpha-blending = linear-corrected
+linux-cgroup = always
