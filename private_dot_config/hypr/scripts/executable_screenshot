@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+dir="$HOME/Pictures/Screenshots/"
+
+corner_radius=$(hyprctl getoption decoration:rounding -j | jq '.int // 2')
+border_size=$(hyprctl getoption general:border_size -j | jq '.int // 2')
+
+shotwin () {
+    win_json=$(hyprctl activewindow -j)
+    pos_x=$(echo "$win_json" | jq '.at[0]')
+    pos_y=$(echo "$win_json" | jq '.at[1]')
+    width=$(echo "$win_json" | jq '.size[0]')
+    height=$(echo "$win_json" | jq '.size[1]')
+
+    adj_x=$((pos_x - border_size))
+    adj_y=$((pos_y - border_size))
+    adj_w=$((width + border_size * 2))
+    adj_h=$((height + border_size * 2))
+
+    timestamp=$(date '+%Y-%m-%d_%H.%M.%S')
+    outfile="$dir/Screenshot-$timestamp.png"
+    mask="/tmp/hyprshot_mask_$timestamp.png"
+
+    grim -g "${adj_x},${adj_y} ${adj_w}x${adj_h}" "$outfile"
+
+    magick -size ${adj_w}x${adj_h} xc:none \
+        -fill white -draw "roundrectangle 0,0 $((adj_w - 1)),$((adj_h - 1)) $corner_radius,$corner_radius" \
+        "$mask"
+
+    magick "$outfile" "$mask" -alpha on -compose DstIn -composite "$outfile"
+
+    rm "$mask"
+
+    notify-send "📸 Window screenshot saved" "$outfile"
+    xdg-open "$outfile" & disown
+}
+
+shotarea () {
+    timestamp=$(date '+%Y-%m-%d_%H.%M.%S')
+    outfile="$dir/Screenshot-$timestamp.png"
+    
+    grim -g "$(slurp -b '#1B1F28CC' -c '#C778DD' -s '#C778DD0D' -w 2)" - | \
+        satty --filename - --output-filename "$outfile"
+
+    if [[ -f "$outfile" ]]; then
+        notify-send "📸 Area screenshot saved" "$outfile"
+        xdg-open "$outfile" & disown
+    else
+        notify-send "Screenshot cancelled" "No area was selected."
+    fi
+}
+
+shotfull() {
+    timestamp=$(date '+%Y-%m-%d_%H.%M.%S')
+    outfile="$dir/Screenshot-$timestamp.png"
+
+    grim "$outfile"
+
+    notify-send "📸 Fullscreen screenshot saved" "$outfile"
+    xdg-open "$outfile" & disown
+}
+
+
+mkdir -p "$dir"
+
+case "$1" in
+    --win)
+        shotwin
+        ;;
+    --area)
+        shotarea
+        ;;
+    --full)
+        shotfull
+        ;;
+    *)
+        echo -e "Usage: $(basename "$0") [option]\n"
+        echo "Available Options:"
+        echo "  --win   Capture the active window, matching its current border and corner radius."
+        echo "  --area  Select a custom area of the screen to capture."
+        echo "  --full  Capture the entire screen/workspace."
+        exit 1
+        ;;
+esac
+
+exit 0
+

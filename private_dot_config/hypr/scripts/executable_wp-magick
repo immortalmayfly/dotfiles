@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+# Path to your config
+last_wall="$HOME/.local/state/lastwall"
+
+# Extract wallpaper path from lastwall
+current_wp=$(cat "$last_wall")
+
+# Expand ~ to full home directory
+wall_path="${current_wp/#\~/$HOME}"
+
+# Output file
+wlogout_bg="$HOME/.config/wlogout/current-wp"
+rofi_bg="$HOME/.config/rofi/current-wp"
+
+# Run ImageMagick: blur and resize
+magick "$wall_path" -blur 50x30 -resize 1920x1080 "$wlogout_bg"
+magick "$wall_path" -blur 0x10 -resize 1920x1080 "$rofi_bg"

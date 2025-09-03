@@ -1,0 +1,352 @@
+#!/usr/bin/env python3
+
+import gi
+import subprocess
+import os
+import shutil
+import threading
+import pathlib
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, GdkPixbuf, GLib
+
+SCHEMES = {
+    "scheme-content": "Content",
+    "scheme-expressive": "Expressive",
+    "scheme-fidelity": "Fidelity",
+    "scheme-fruit-salad": "Fruit Salad",
+    "scheme-monochrome": "Monochrome",
+    "scheme-neutral": "Neutral",
+    "scheme-rainbow": "Rainbow",
+    "scheme-tonal-spot": "Tonal Spot",
+    "scheme-vibrant": "Vibrant",
+}
+
+LAST_WALLPAPER_FILE = pathlib.Path.home() / ".cache/matugen_last_wall"
+
+def check_command(cmd):
+    return shutil.which(cmd) is not None
+
+if not check_command("swww"):
+    print("Error: 'swww' command not found. Please install swww.")
+    exit(1)
+
+if not check_command("matugen"):
+    print("Error: 'matugen' command not found. Please install matugen.")
+    exit(1)
+
+class MatugenApp(Gtk.Window):
+    VALID_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+
+    def __init__(self):
+        super().__init__()
+
+        self.set_default_size(520, 460)
+        self.set_resizable(False)
+        self.set_border_width(12)
+        self.set_title("Matugen GUI")
+
+        header = Gtk.HeaderBar()
+        header.set_show_close_button(True)
+        header.props.title = "Matugen GUI"
+        self.set_titlebar(header)
+
+        outer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        outer_box.set_valign(Gtk.Align.FILL)
+        outer_box.set_halign(Gtk.Align.FILL)
+        self.add(outer_box)
+
+        # Wallpaper Frame
+        wallpaper_frame = Gtk.Frame(label="Wallpaper")
+        wallpaper_frame.set_label_align(0.05, 0.5)
+        wallpaper_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        wallpaper_box.set_margin_top(8)
+        wallpaper_box.set_margin_bottom(8)
+        wallpaper_box.set_margin_start(12)
+        wallpaper_box.set_margin_end(12)
+        wallpaper_frame.add(wallpaper_box)
+
+        entry_box = Gtk.Box(spacing=6)
+        self.wallpaper_entry = Gtk.Entry()
+        self.wallpaper_entry.set_hexpand(True)
+        entry_box.pack_start(self.wallpaper_entry, True, True, 0)
+
+        browse_button = Gtk.Button(label="Browse File")
+        browse_button.connect("clicked", self.on_browse_wallpaper)
+        entry_box.pack_start(browse_button, False, False, 0)
+
+        browse_folder_button = Gtk.Button(label="Browse Folder")
+        browse_folder_button.connect("clicked", self.on_browse_folder)
+        entry_box.pack_start(browse_folder_button, False, False, 0)
+
+        wallpaper_box.pack_start(entry_box, False, False, 0)
+
+        self.preview_image = Gtk.Image()
+        self.preview_image.set_halign(Gtk.Align.CENTER)
+        self.preview_image.set_valign(Gtk.Align.CENTER)
+        self.preview_image.set_margin_top(10)
+        self.preview_image.set_margin_bottom(10)
+        wallpaper_box.pack_start(self.preview_image, False, False, 0)
+
+        # Navigation controls for folder images
+        nav_box = Gtk.Box(spacing=6)
+        nav_box.set_halign(Gtk.Align.CENTER)
+
+        self.prev_button = Gtk.Button(label="Previous")
+        self.prev_button.connect("clicked", self.on_prev_clicked)
+        nav_box.pack_start(self.prev_button, False, False, 0)
+
+        self.next_button = Gtk.Button(label="Next")
+        self.next_button.connect("clicked", self.on_next_clicked)
+        nav_box.pack_start(self.next_button, False, False, 0)
+
+        wallpaper_box.pack_start(nav_box, False, False, 0)
+
+        outer_box.pack_start(wallpaper_frame, False, False, 0)
+
+        # Scheme Frame
+        scheme_frame = Gtk.Frame(label="Color Scheme")
+        scheme_frame.set_label_align(0.05, 0.5)
+        scheme_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        scheme_box.set_margin_top(8)
+        scheme_box.set_margin_bottom(8)
+        scheme_box.set_margin_start(12)
+        scheme_box.set_margin_end(12)
+        scheme_frame.add(scheme_box)
+
+        self.scheme_combo = Gtk.ComboBoxText()
+        self.scheme_key_map = {}
+        for key, label in SCHEMES.items():
+            self.scheme_combo.append_text(label)
+            self.scheme_key_map[label] = key
+        self.scheme_combo.set_active(list(SCHEMES.values()).index("Tonal Spot"))
+        scheme_box.pack_start(self.scheme_combo, False, False, 0)
+
+        self.wallpaper_only_check = Gtk.CheckButton(label="Apply only wallpaper (skip theme)")
+        self.wallpaper_only_check.set_halign(Gtk.Align.CENTER)
+        scheme_box.pack_start(self.wallpaper_only_check, False, False, 0)
+
+        outer_box.pack_start(scheme_frame, False, False, 0)
+
+        # Apply Button
+        self.apply_button = Gtk.Button(label="Apply")
+        self.apply_button.get_style_context().add_class("suggested-action")
+        self.apply_button.set_halign(Gtk.Align.CENTER)
+        self.apply_button.connect("clicked", self.on_apply_clicked)
+        outer_box.pack_start(self.apply_button, False, False, 0)
+
+        # Status Label
+        self.status_label = Gtk.Label()
+        self.status_label.set_line_wrap(True)
+        self.status_label.set_margin_top(10)
+        self.status_label.set_justify(Gtk.Justification.CENTER)
+        self.status_label.set_halign(Gtk.Align.CENTER)
+        outer_box.pack_start(self.status_label, False, False, 0)
+
+        self.wallpaper_entry.connect("changed", self.on_wallpaper_entry_changed)
+
+        # Folder images state
+        self.folder_images = []
+        self.current_index = -1
+
+        # Load last wallpaper if available
+        if LAST_WALLPAPER_FILE.exists():
+            last_wp = LAST_WALLPAPER_FILE.read_text().strip()
+            if os.path.isfile(last_wp):
+                self.wallpaper_entry.set_text(last_wp)
+
+        self.update_nav_buttons()
+
+    def on_browse_wallpaper(self, button):
+        dialog = Gtk.FileChooserDialog(
+            title="Select Wallpaper",
+            parent=self,
+            action=Gtk.FileChooserAction.OPEN,
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL,
+            Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK,
+        )
+        filter_img = Gtk.FileFilter()
+        filter_img.set_name("Image files")
+        for pattern in ["*.png", "*.jpg", "*.jpeg", "*.webp"]:
+            filter_img.add_pattern(pattern)
+        dialog.add_filter(filter_img)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            filename = dialog.get_filename()
+            self.folder_images = []
+            self.current_index = -1
+            self.wallpaper_entry.set_text(filename)
+            self.update_nav_buttons()
+        dialog.destroy()
+
+    def on_browse_folder(self, button):
+        dialog = Gtk.FileChooserDialog(
+            title="Select Folder",
+            parent=self,
+            action=Gtk.FileChooserAction.SELECT_FOLDER,
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL,
+            Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK,
+        )
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            folder = pathlib.Path(dialog.get_filename())
+            self.load_folder_images(folder)
+        dialog.destroy()
+
+    def load_folder_images(self, folder: pathlib.Path):
+        print(f"Loading images from folder: {folder}")
+        images = sorted(
+            f for f in folder.iterdir()
+            if f.is_file() and f.suffix.lower() in self.VALID_IMAGE_EXTENSIONS
+        )
+        print(f"Found images: {[str(f) for f in images]}")
+
+        if not images:
+            self.set_status("No valid images found in the selected folder.")
+            self.clear_folder_preview()
+            return
+
+        self.folder_images = images
+        self.current_index = 0
+        self.set_status(f"Loaded {len(images)} images from folder '{folder.name}'.")
+        self.update_preview_image()
+        self.update_nav_buttons()
+
+    def clear_folder_preview(self):
+        self.folder_images = []
+        self.current_index = -1
+        self.preview_image.clear()
+        self.set_status("")
+        self.update_nav_buttons()
+
+    def update_preview_image(self):
+        if 0 <= self.current_index < len(self.folder_images):
+            path = self.folder_images[self.current_index]
+            self.wallpaper_entry.set_text(str(path))
+
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(str(path), 280, 160, True)
+                self.preview_image.set_from_pixbuf(pixbuf)
+            except Exception as e:
+                self.preview_image.clear()
+                self.set_status(f"Error loading preview image:\n{e}")
+                return
+
+            self.set_status(f"Previewing {path.name} ({self.current_index + 1} of {len(self.folder_images)})")
+        else:
+            self.preview_image.clear()
+            self.set_status("No image to preview.")
+
+    def update_nav_buttons(self):
+        n = len(self.folder_images)
+        self.prev_button.set_sensitive(n > 1 and self.current_index > 0)
+        self.next_button.set_sensitive(n > 1 and self.current_index < n - 1)
+
+    def on_prev_clicked(self, button):
+        if self.current_index > 0:
+            self.current_index -= 1
+            self.update_preview_image()
+            self.update_nav_buttons()
+
+    def on_next_clicked(self, button):
+        if self.current_index < len(self.folder_images) - 1:
+            self.current_index += 1
+            self.update_preview_image()
+            self.update_nav_buttons()
+
+    def on_wallpaper_entry_changed(self, entry):
+        path = entry.get_text()
+        # Manual entry clears folder preview (stop navigation)
+        if self.folder_images and (self.current_index == -1 or pathlib.Path(path) != self.folder_images[self.current_index]):
+            self.clear_folder_preview()
+
+        if os.path.isfile(path):
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 280, 160, True)
+                self.preview_image.set_from_pixbuf(pixbuf)
+                self.set_status(f"Previewing {os.path.basename(path)}")
+            except Exception:
+                self.preview_image.clear()
+                self.set_status("")
+        else:
+            self.preview_image.clear()
+            self.set_status("")
+
+    def notify(self, title, message, icon_path=None):
+        args = ["notify-send", title, message]
+        if icon_path and os.path.isfile(icon_path):
+            args.extend(["-i", icon_path])
+        subprocess.run(args)
+
+    def set_status(self, text):
+        GLib.idle_add(self.status_label.set_text, text)
+
+    def on_apply_clicked(self, button):
+        wallpaper = self.wallpaper_entry.get_text().strip()
+        if not wallpaper:
+            if LAST_WALLPAPER_FILE.exists():
+                wallpaper = LAST_WALLPAPER_FILE.read_text().strip()
+                if not os.path.isfile(wallpaper):
+                    self.set_status("Last wallpaper file missing. Please select a wallpaper.")
+                    return
+            else:
+                self.set_status("No wallpaper selected and no previous wallpaper saved.")
+                return
+        elif not os.path.isfile(wallpaper):
+            self.set_status("Selected wallpaper file does not exist.")
+            return
+
+        selected_label = self.scheme_combo.get_active_text()
+        scheme = self.scheme_key_map.get(selected_label)
+        if not scheme:
+            self.set_status("Invalid scheme selected.")
+            return
+
+        only_wallpaper = self.wallpaper_only_check.get_active()
+        mode = "dark"
+
+        def worker():
+            self.set_status("Applying settings...")
+
+            try:
+                if not only_wallpaper:
+                    subprocess.run(["matugen", "-t", scheme, "-m", mode, "image", wallpaper], check=True)
+
+                subprocess.run(["swww", "img", wallpaper, "--transition-type", "center"], check=True)
+
+                LAST_WALLPAPER_FILE.write_text(wallpaper)
+
+                self.notify(
+                    "Wallpaper Applied" if only_wallpaper else "Matugen Theme Applied",
+                    f"Wallpaper: {os.path.basename(wallpaper)}",
+                    icon_path=wallpaper,
+                )
+
+                self.set_status("Success! Wallpaper applied." if only_wallpaper
+                                else "Success! Theme and wallpaper applied.")
+            except subprocess.CalledProcessError as e:
+                self.set_status(f"Error applying theme or wallpaper:\n{e}")
+                self.notify("Error", f"Failed to apply theme or wallpaper:\n{e}")
+            except Exception as e:
+                self.set_status(f"Unexpected error:\n{e}")
+
+        threading.Thread(target=worker, daemon=True).start()
+
+def main():
+    app = MatugenApp()
+    app.connect("destroy", Gtk.main_quit)
+    app.show_all()
+    Gtk.main()
+
+if __name__ == "__main__":
+    main()
