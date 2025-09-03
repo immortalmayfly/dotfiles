@@ -1,0 +1,2 @@
+ active-gradient angle=150 from="{{colors.primary.default.hex}}" relative-to="window" to="{{colors.primary.default.hex}}"
+ inactive-gradient angle=45 from="{{colors.on_secondary.default.hex}}" relative-to="window" to="{{colors.on_secondary.default.hex}}"

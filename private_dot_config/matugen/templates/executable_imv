@@ -1,0 +1,8 @@
+[options]
+background = {{colors.background.default.hex_stripped}}
+overlay_background_color = {{colors.background.default.hex_stripped}}
+overlay_background_alpha = e6
+fullscreen = false
+overlay_font = CaskaydiaCove Nerd Font:12
+recursively = true
+scaling_mode = full

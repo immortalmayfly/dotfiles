@@ -1,0 +1,135 @@
+format = """
+$username\
+$kubernetes\
+$directory\
+${custom.git_host}\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$codon\
+$crystal\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$gleam\
+$golang\
+$haxe\
+$helm\
+$java\
+$julia\
+$kotlin\
+$lua\
+$matlab\
+$nim\
+$nodejs\
+$ocaml\
+$odin\
+$perl\
+$php\
+$purescript\
+$python\
+$haskell\
+$red\
+$rlang\
+$ruby\
+$rust\
+$swift\
+$terraform\
+$vlang\
+$vagrant\
+$zig\
+$nix_shell\
+$conda\
+$aws\
+$gcloud\
+$openstack\
+$env_var\
+$custom\
+$cmd_duration\
+$line_break\
+$jobs\
+$character"""
+
+scan_timeout = 10
+
+command_timeout = 6000
+
+add_newline = true
+
+palette = 'colors'
+
+[palettes.colors]
+color1 = '{{colors.primary_fixed_dim.default.hex}}'
+color2 = '{{colors.on_primary.default.hex}}'
+color3 = '{{colors.on_surface_variant.default.hex}}'
+color4 = '{{colors.surface_container.default.hex}}'
+color5 = '{{colors.on_primary.default.hex}}'
+color6 = '{{colors.surface_dim.default.hex}}'
+color7 = '{{colors.surface.default.hex}}'
+color8 = '{{colors.primary.default.hex}}'
+color9 = '{{colors.tertiary.default.hex}}'
+error  = '{{colors.error.default.hex}}'
+
+[directory]
+format = "[$path($style)$read_only($read_only_style) ](color3)"
+read_only = " "
+truncation_length = 6
+truncation_symbol = "❯❯❯ "
+fish_style_pwd_dir_length = 0
+
+[git_branch]
+format = ":[$symbol$branch]($style) "
+symbol = " "
+
+[python]
+symbol = " "
+format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+
+[rlang]
+symbol = " "
+
+[custom.git_host]
+command = """
+URL=$(command git ls-remote --get-url 2> /dev/null)
+
+if [[ "$URL" =~ "github" ]]; then
+    ICON=" "
+elif [[ "$URL" =~ "gitlab" ]]; then
+    ICON=" "
+elif [[ "$URL" =~ "bitbucket" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "kernel" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "archlinux" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "gnu" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "git" ]];then
+    ICON=" "
+else
+    ICON=" "
+    URL="localhost"
+fi
+
+for PATTERN in "https" "http" "git" "://" "@"; do
+    [[ "$URL" == "$PATTERN"* ]] && URL="${URL##$PATTERN}"
+done
+
+for PATTERN in "/" ".git"; do
+    [[ "$URL" == *"$PATTERN" ]] && URL="${URL%%$PATTERN}"
+done
+printf "%s%s" "$ICON" "$URL"
+"""
+directories = [".git"]
+when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+shell = ["bash","--norc","--noprofile"]
+style = "color1 bold"
+format = "at [$output]($style)"

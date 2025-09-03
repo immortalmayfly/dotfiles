@@ -1,0 +1,179 @@
+[config]
+version_check = true
+
+[config.custom_colors]
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+orange = "#fab387"
+purple = "#cba6f7"
+
+[config.wallpaper]
+command = "swww"
+arguments = ["img", "--transition-type", "any"]
+set = true
+
+# -----------------------
+# Templates
+# -----------------------
+
+[templates.lastwall]
+input_path = "./templates/lastwall"
+output_path = "~/.local/state/lastwall"
+
+[templates.hyprland]
+input_path = "./templates/hyprland.conf"
+output_path = "~/.config/hypr/colors/matugen-hyprland.conf"
+post_hook = "hyprctl reload"
+
+[templates.hyprlock]
+input_path = "./templates/hyprlock.conf"
+output_path = "~/.config/hypr/colors/matugen-hyprlock.conf"
+
+# [templates.niri]
+# input_path = "./templates/niri.kdl"
+# output_path = "~/.cache/niri/matugen.kdl"
+# post_hook = "bash -c ~/.config/niri/scripts/applytheme"
+
+[templates.gtk3]
+input_path = "./templates/gtk.css"
+output_path = "~/.config/gtk-3.0/gtk.css"
+
+[templates.gtk4]
+input_path = "./templates/gtk.css"
+output_path = "~/.config/gtk-4.0/gtk.css"
+
+[templates.yazi]
+input_path = "./templates/yazi.toml"
+output_path = "~/.config/yazi/theme.toml"
+
+# [templates.wezterm]
+# input_path = "./templates/wezterm.toml"
+# output_path = "~/.config/wezterm/colors/matugen.toml"
+
+[templates.kitty]
+input_path  = "./templates/kitty.conf"
+output_path = "~/.config/kitty/matugen.conf"
+post_hook   = "pkill -SIGUSR1 kitty"
+
+[templates.ghostty]
+input_path = "./templates/ghostty"
+output_path = "~/.config/ghostty/themes/matugen"
+
+# [templates.alacritty]
+# input_path  = "./templates/alacritty.toml"
+# output_path = "~/.config/alacritty/colors/matugen.toml"
+
+[templates.waybar]
+input_path = "./templates/colors.css"
+output_path = "~/.config/waybar/matugen.css"
+post_hook = "killall -SIGUSR2 waybar"
+
+[templates.wlogout]
+input_path = "./templates/colors.css"
+output_path = "~/.config/wlogout/matugen.css"
+
+[templates.zathura]
+input_path = "./templates/zathura"
+output_path = "~/.config/zathura/zathurarc"
+
+# [templates.fuzzel]
+# input_path = "./templates/fuzzel.ini"
+# output_path = "~/.config/fuzzel/fuzzel.ini"
+
+[templates.rofi]
+input_path = "./templates/rofi.rasi"
+output_path = "~/.config/rofi/matugen.rasi"
+
+[templates.mako]
+input_path = "./templates/mako"
+output_path = "~/.config/mako/config"
+post_hook = "pidof mako >/dev/null && pkill mako && mako >/dev/null 2>&1 &"
+
+# [templates.avizo]
+# input_path = "./templates/avizo.ini"
+# output_path = "~/.config/avizo/config.ini"
+
+[templates.pywalfox]
+input_path = "./templates/colors.json"
+output_path = "~/.cache/wal/colors.json"
+post_hook = "pywalfox update"
+
+[templates.rmpc]
+input_path = "./templates/rmpc.ron"
+output_path = "~/.config/rmpc/themes/matugen.ron"
+
+# [templates.zed]
+# input_path = "./templates/zed.json"
+# output_path = "~/.config/zed/themes/matugen.json"
+
+[templates.fish]
+input_path = "./templates/fish.theme"
+output_path = "~/.config/fish/themes/matugen.theme"
+post_hook = 'command -v fish > /dev/null 2>&1 && fish -c "fish_config theme choose matugen"'
+
+[templates.neovim]
+input_path = "./templates/nvim.lua"
+output_path = "~/.local/share/nvim/lazy/base46/lua/base46/themes/matugen.lua"
+
+# [templates.helix]
+# input_path = "./templates/helix.toml"
+# output_path = "~/.config/helix/themes/matugen.toml"
+
+[templates.btop]
+input_path = "./templates/btop.theme"
+output_path = "~/.config/btop/themes/matugen.theme"
+post_hook = "pgrep -x btop >/dev/null && pkill -USR2 -x btop || :"
+
+[templates.qt5ct]
+input_path = "./templates/qtct.conf"
+output_path = "~/.config/qt5ct/colors/matugen.conf"
+
+[templates.qt6ct]
+input_path = "./templates/qtct.conf"
+output_path = "~/.config/qt6ct/colors/matugen.conf"
+
+[templates.kvconfig]
+input_path = "./templates/kvantum/kvantum.kvconfig"
+output_path = "~/.config/Kvantum/matugen/matugen.kvconfig"
+post_hook = "kvantummanager --set matugen"
+
+[templates.kvsvg]
+input_path = "./templates/kvantum/kvantum.svg"
+output_path = "~/.config/Kvantum/matugen/matugen.svg"
+post_hook = "kvantummanager --set matugen"
+
+[templates.cava]
+input_path = "./templates/cava.ini"
+output_path = "~/.config/cava/config"
+
+[templates.starship]
+input_path = "./templates/starship.toml"
+output_path = "~/.config/starship.toml"
+
+[templates.imv]
+input_path = "./templates/imv"
+output_path = "~/.config/imv/config"
+
+[templates.papirus-folders]
+input_path = "./templates/papirus-folders.toml"
+output_path = "~/.cache/papirus-folders.toml"
+compare_to = "{{colors.primary.default.hex}}"
+colors_to_compare = [
+    { name = "cat-mocha-rosewater", color = "#f5e0dc" },
+    { name = "cat-mocha-flamingo", color = "#f2cdcd" },
+    { name = "cat-mocha-pink", color = "#f5c2e7" },
+    { name = "cat-mocha-mauve", color = "#cba6f7" },
+    { name = "cat-mocha-red", color = "#f38ba8" },
+    { name = "cat-mocha-maroon", color = "#eba0ac" },
+    { name = "cat-mocha-peach", color = "#fab387" },
+    { name = "cat-mocha-yellow", color = "#f9e2af" },
+    { name = "cat-mocha-green", color = "#a6e3a1" },
+    { name = "cat-mocha-teal", color = "#94e2d5" },
+    { name = "cat-mocha-sky", color = "#89dceb" },
+    { name = "cat-mocha-sapphire", color = "#74c7ec" },
+    { name = "cat-mocha-blue", color = "#89b4fa" },
+    { name = "cat-mocha-lavender", color = "#b4befe" },
+]
+post_hook = "papirus-folders -C {{closest_color}} -t Papirus-Dark"
