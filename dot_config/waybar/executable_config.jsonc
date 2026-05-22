@@ -1,0 +1,34 @@
+{
+  // load modules
+  "include": "~/.config/waybar/modules.json",
+
+  // reload on style change
+  "reload_style_on_change": true,
+
+  // general settings
+  "position": "top",
+  "margin-top": 8,
+  "margin-bottom": 0,
+  "margin-left": 8,
+  "margin-right": 8,
+  "layer": "bottom",
+  "spacing": 10,
+  "fixed-center": true,
+  "exclusive": true,
+
+  // modules
+  "modules-left": ["ext/workspaces", "wlr/taskbar"],
+
+  "modules-center": ["mpris"],
+
+  "modules-right": [
+    "tray",
+    "custom/layout",
+    "pulseaudio",
+    "backlight",
+    "network",
+    "battery",
+    "clock",
+    "custom/exit",
+  ],
+}

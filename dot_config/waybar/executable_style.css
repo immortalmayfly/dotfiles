@@ -1,0 +1,290 @@
+@import url("matugen.css");
+
+/* @define-color ws @color4; */
+/* @define-color tt @background; */
+/* @define-color pc @color4; */
+/* @define-color pch @color15; */
+/* @define-color clock @color4; */
+/* @define-color set @color4; */
+/* @define-color tb rgba(200,200,200,0.2); */
+/* @define-color tbh @color5; */
+/* @define-color text #FFFFFF; */
+
+@define-color tt @background;
+@define-color pch @surface_tint;
+@define-color tb rgba(200,200,200,0.2);
+@define-color text #FFFFFF;
+@define-color pc @secondary_container;
+@define-color set @primary_container;
+
+/* general */
+* {
+  font-family: "CaskaydiaCove Nerd Font";
+  border: none;
+  border-radius: 5px;
+}
+
+window#waybar {
+  background-color: rgba(0, 0, 0, 0.4);
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  border-radius: 6px;
+}
+
+/* workspaces */
+#workspaces {
+  margin: 4px 1px 4px 1px;
+  padding: 0px 0px;
+  border-radius: 5px;
+  border: 0px;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 16px;
+  color: @text;
+  opacity: 0.8;
+}
+
+#workspaces button {
+  margin: 0px 2px;
+  padding: 0px 5px;
+  color: @text;
+  transition: all 0.3s ease-in-out;
+}
+
+#workspaces button.active {
+  color: @text;
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  transition: all 0.3s ease-in-out;
+  opacity: 0.8;
+}
+
+#workspaces button:hover {
+  color: @text;
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  opacity: 0.8;
+  border: none;
+  box-shadow: none;
+}
+
+/* layout */
+#custom-layout {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
+}
+
+#custom-layout:hover {
+  background: linear-gradient(90deg, @primary, @secondary, @tertiary);
+  opacity: 1;
+}
+
+#taskbar {
+  background: @tb;
+  margin: 4px 15px 4px 1px;
+  padding: 0px;
+}
+
+#taskbar button {
+  margin: 0px 1px;
+  border-radius: 5px;
+  padding: 0px 5px;
+}
+
+#taskbar button:hover {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  opacity: 1;
+  border: none;
+  box-shadow: none;
+}
+
+/* tooltip */
+tooltip {
+  border-radius: 5px;
+  background: @tt;
+  opacity: 0.9;
+}
+
+tooltip label {
+  border-radius: 5px;
+  background: @tt;
+  opacity: 0.9;
+  padding: 0px;
+  margin: -5px 0px;
+  color: @text;
+}
+
+/* modules */
+.modules-left > widget:first-child > #workspaces {
+  margin-left: 10px;
+}
+
+.modules-right > widget:last-child > #workspaces {
+  margin-right: 0;
+}
+
+#mpris {
+  background: @pc;
+  color: @text;
+  font-weight: bold;
+  margin: 4px 1px;
+  padding: 1px 10px;
+  opacity: 0.8;
+}
+
+/* clock */
+#clock {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+  border: none;
+}
+
+/* hardware group */
+#cpu,
+#temperature,
+#disk,
+#memory {
+  margin: 0px;
+  padding: 0px;
+  font-size: 16px;
+  color: @text;
+}
+
+/* audio */
+#pulseaudio {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+}
+
+/* brightness */
+#backlight {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+}
+
+/* network */
+#network {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+}
+
+#network.ethernet {
+  background-color: @set;
+  color: @text;
+}
+
+#network.wifi {
+  background-color: @set;
+  color: @text;
+}
+
+/* bluetooth */
+#bluetooth,
+#bluetooth.on,
+#bluetooth.connected,
+#bluetooth.off {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+}
+
+/* battery */
+#battery {
+  background: linear-gradient(270deg, @primary, @secondary, @tertiary);
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.8;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: @text;
+  background-color: @set;
+}
+
+@keyframes blink {
+  to {
+    background-color: @set;
+    color: @text;
+  }
+}
+
+#battery.critical:not(.charging) {
+  background-color: #f53c3c;
+  color: @text;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+/* tray */
+#tray {
+  padding: 0px 15px 0px 0px;
+  color: @text;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+}
+
+/* custom modules */
+#custom-exit {
+  margin: 0px 18px 0px 5px;
+  padding: 0px;
+  font-size: 20px;
+  color: @text;
+}
+
+#custom-system {
+  margin-right: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  opacity: 0.8;
+  color: @text;
+  margin: 4px 1px;
+}
+
+#custom-settings {
+  margin-right: 0px;
+  font-size: 20px;
+  font-weight: bold;
+  opacity: 0.8;
+  color: @text;
+}

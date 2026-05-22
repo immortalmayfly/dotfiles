@@ -1,0 +1,28 @@
+# Ghostty Matugen Theme
+# Automatically generated via Matugen templates
+
+background = #0f131c
+foreground = #dfe2ef
+cursor-color = #55d6f3
+cursor-text = #003640
+selection-background = #004e5c
+selection-foreground = #abedff
+palette = 0=#262a33
+palette = 1=#ffb4ab
+palette = 2=#55d6f3
+palette = 3=#aec6ff
+palette = 4=#84d2e6
+palette = 5=#abedff
+palette = 6=#abedff
+palette = 7=#bfc6dc
+palette = 8=#8990a5
+palette = 9=#93000a
+palette = 10=#004e5c
+palette = 11=#2c4678
+palette = 12=#004e5c
+palette = 13=#00687a
+palette = 14=#3f4759
+palette = 15=#dfe2ef
+
+# 256-color palette generation
+palette-generate = true

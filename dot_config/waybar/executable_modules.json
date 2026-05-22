@@ -1,0 +1,188 @@
+{
+  // niri workspaces
+  "niri/workspaces": {
+    "format": "{index}",
+    "on-click": "activate"
+  },
+
+  // taskbar
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 18,
+    "tooltip-format": "{title}",
+    "on-click": "activate",
+    "on-click-middle": "close"
+  },
+
+  // mangowc layouts
+  "custom/layout": {
+    "exec": "mmsg -w -l | stdbuf -oL cut -d ' ' -f 3 | stdbuf -oL uniq",
+    "format": "󰕰 {}",
+    "tooltip": false,
+    "on-click": "mmsg -s -d switch_layout"
+  },
+
+  // tray
+  "tray": {
+    "spacing": 10
+  },
+
+  "mpris": {
+    "format": "{player_icon} {status_icon} {dynamic}",
+    "format-paused": "{player_icon} {status_icon} <i>{dynamic}</i>",
+    "dynamic-order": ["artist", "title"],
+    "dynamic-len": 40,
+    "player-icons": {
+      "default": "<span> </span>",
+      "mpv": "<span>󰐊 </span>",
+      "spotify": "<span> </span>",
+      "firefox": "<span> </span>",
+      "vivaldi": "<span> </span>",
+      "chromium": "<span> </span>",
+      "apple-music": "<span>󰎈 </span>"
+    },
+    "status-icons": {
+      "playing": "<span> </span>",
+      "paused": "<span> </span>",
+      "stopped": "<span> </span>"
+    },
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "tooltip-format": "Player: {player}\nTitle: {title}\nArtist: {artist}\nAlbum: {album}\nLength: {length}"
+  },
+
+  // clock
+  "clock": {
+    "interval": 1,
+    "format": "󰃰 {:%I:%M %p}",
+    "tooltip-format": "<big>{calendar}</big>",
+    "calendar": {
+      "mode-mon-col": 4,
+      "weeks-pos": "left",
+      "on-scroll": 1,
+      "on-click-right": "mode",
+      "format": {
+        "months": "<span color='#EA9A97'>{}</span>",
+        "weeks": "<span color='#9CCFD8'>{}</span>",
+        "weekdays": "<span color='#F6C177'>{}</span>",
+        "today": "<span color='#EB6F92'><b>{}</b></span>"
+      }
+    }
+  },
+
+  // hardware
+  "group/hardware": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": false
+    },
+    "modules": ["custom/system", "cpu", "temperature", "disk", "memory"]
+  },
+
+  // system
+  "custom/system": {
+    "format": "<span size='small'>  </span>",
+    "tooltip": false
+  },
+
+  // cpu
+  "cpu": {
+    "format": " 󰍛 {usage}% ",
+    "on-click": "kitty -e btop"
+  },
+
+  // temperature
+  "temperature": {
+    "thermal-zone": 2,
+    "format": " 󰈸 {temperatureC}°C ",
+    "on-click": "kitty -e btop"
+  },
+
+  // harddisc space
+  "disk": {
+    "interval": 30,
+    "format": " 󰋊 {percentage_used}% ",
+    "path": "/",
+    "on-click": "kitty -e btop"
+  },
+
+  // memory
+  "memory": {
+    "format": "  {}% ",
+    "on-click": "kitty -e btop"
+  },
+
+  // audio
+  "pulseaudio": {
+    "scroll-step": 1,
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "{volume}% {icon} {format_source}",
+    "format-bluetooth-muted": "󰖁 {icon} {format_source}",
+    "format-muted": "󰖁 {format_source}",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "phone": "",
+      "car": "",
+      "default": ["", " ", " "]
+    },
+    "on-click": "foot --app-id=Wiremix -e wiremix"
+  },
+
+  //backlight
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon} {percent}%",
+    "format-icons": ["", "", "", "", "", "", "", "", ""]
+  },
+
+  // bluetooth
+  "bluetooth": {
+    "format": " {status}",
+    "format-disabled": " {status}",
+    "format-off": " {status}",
+    "interval": 30,
+    "on-click": "bzmenu -l rofi",
+    "format-no-controller": ""
+  },
+
+  // network
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": "  {signalStrength}%",
+    "format-ethernet": "󰌘 {ifname}",
+    "format-disconnected": "disconnected",
+    "tooltip-format": "󰌘 {ifname} via {gwaddri}",
+    "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}",
+    "tooltip-format-ethernet": "󰌘 {ifname}\nIP: {ipaddr}\n  {bandwidthUpBits}  {bandwidthDownBits}",
+    "tooltip-format-disconnected": "disconnected",
+    "max-length": 50,
+    "on-click": "kitty -e nmtui"
+  },
+
+  // battery
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 10
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": [" ", " ", " ", " ", " "]
+  },
+
+  // power menu
+  "custom/exit": {
+    "format": "",
+    "on-click": "wlogout -b 2",
+    "tooltip": false
+  }
+}

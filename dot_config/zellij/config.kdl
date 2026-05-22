@@ -1,0 +1,12 @@
+session_name "main"
+attach_to_session true
+disable_session_metadata true
+
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}
+simplified_ui true
+theme "matugen"
+show_startup_tips false

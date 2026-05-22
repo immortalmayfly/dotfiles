@@ -1,0 +1,64 @@
+theme = "matugen"
+prompt_text = "search..."
+show_icons = false
+nerd_font = false
+
+[layout]
+width = 680
+height = 500
+header_height = 64
+footer_height = 28
+row_height = 54
+max_results = 50
+
+[font]
+size_prompt = 20
+size_title = 13
+size_sub = 11
+size_hint = 10
+
+[[engines]]
+prefix = "g:"
+name = "Google"
+url = "https://www.google.com/search?q=%s"
+
+[[engines]]
+prefix = "d:"
+name = "DuckDuckGo"
+url = "https://duckduckgo.com/?q=%s"
+
+[[engines]]
+prefix = "gh:"
+name = "GitHub"
+url = "https://github.com/search?q=%s"
+
+[[engines]]
+prefix = "yt:"
+name = "YouTube"
+url = "https://youtube.com/results?search_query=%s"
+
+[[engines]]
+prefix = "r:"
+name = "Reddit"
+url = "https://www.reddit.com/search/?q=%s"
+
+[[engines]]
+prefix = "w:"
+name = "Wikipedia"
+url = "https://en.wikipedia.org/wiki/Special:Search?search=%s"
+
+[themes.matugen]
+background    = "{{colors.surface.default.hex}}"
+header        = "{{colors.surface_container.default.hex}}"
+footer        = "{{colors.surface_container.default.hex}}"
+selected      = "{{colors.surface_container_highest.default.hex}}"
+divider       = "{{colors.outline.default.hex}}"
+text          = "{{colors.on_surface.default.hex}}"
+subtext       = "{{colors.on_surface_variant.default.hex}}"
+hint          = "{{colors.on_surface_variant.default.hex}}"
+border        = "{{colors.outline.default.hex}}"
+accent_apps   = "{{colors.primary.default.hex}}"
+accent_files  = "{{colors.secondary.default.hex}}"
+accent_runner = "{{colors.tertiary.default.hex}}"
+accent_web    = "{{colors.primary_container.default.hex}}"
+accent_dmenu  = "{{colors.error.default.hex}}"

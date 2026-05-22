@@ -1,0 +1,25 @@
+# Appearance
+theme = matugen
+background-opacity = 0.9
+font-family = IosevkaTerm Nerd Font
+font-size = 14
+alpha-blending = linear-corrected
+bold-is-bright = true
+cursor-style-blink = true
+
+# Window & Layout
+window-padding-x = 10
+window-padding-y = 10
+resize-overlay = never
+
+# Behavior
+mouse-scroll-multiplier = 2
+shell-integration = none
+shell-integration-features = true
+confirm-close-surface = false
+gtk-single-instance = true
+linux-cgroup = always
+
+# Keybindings
+keybind = ctrl+shift+/=new_split:down
+keybind = ctrl+shift+\=new_split:right

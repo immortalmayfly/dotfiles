@@ -1,0 +1,436 @@
+format = """
+$username\
+$kubernetes\
+$directory\
+${custom.git_host}\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$c\
+$cpp\
+$cmake\
+$codon\
+$crystal\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$gleam\
+$golang\
+$haskell\
+$haxe\
+$helm\
+$java\
+$julia\
+$kotlin\
+$lua\
+$matlab\
+$mise\
+$nim\
+$nix\
+$nodejs\
+$ocaml\
+$odin\
+$perl\
+$php\
+$purescript\
+$python\
+$red\
+$rlang\
+$ruby\
+$rust\
+$shell\
+$swift\
+$terraform\
+$vlang\
+$vagrant\
+$zig\
+$nix_shell\
+$conda\
+$aws\
+$gcloud\
+$openstack\
+$env_var\
+$custom\
+$jobs\
+$azure\
+$battery\
+$buf\
+$bun\
+$cobol\
+$container\
+$daml\
+$fennel\
+$fortran\
+$fossil_branch\
+$gradle\
+$guix_shell\
+$hostname\
+$memory_usage\
+$meson\
+$mojo\
+$nats\
+$netns\
+$opa\
+$pijul_channel\
+$pixi\
+$pulumi\
+$quarto\
+$raku\
+$scala\
+$shlvl\
+$spack\
+$solidity\
+$status\
+$sudo\
+$typst\
+$xmake\
+$line_break\
+$character"""
+
+scan_timeout = 10
+
+command_timeout = 6000
+
+palette = "colors"
+
+[palettes.colors]
+color1 = '{{colors.primary_fixed_dim.default.hex}}'
+color2 = '{{colors.on_primary.default.hex}}'
+color3 = '{{colors.on_surface_variant.default.hex}}'
+color4 = '{{colors.surface_container.default.hex}}'
+color5 = '{{colors.on_primary.default.hex}}'
+color6 = '{{colors.surface_dim.default.hex}}'
+color7 = '{{colors.surface.default.hex}}'
+color8 = '{{colors.primary.default.hex}}'
+color9 = '{{colors.tertiary.default.hex}}'
+error = '{{colors.error.default.hex}}'
+
+[custom.git_host]
+command = """
+URL=$(command git ls-remote --get-url 2> /dev/null)
+
+if [[ "$URL" =~ "github" ]]; then
+    ICON=" "
+elif [[ "$URL" =~ "gitlab" ]]; then
+    ICON=" "
+elif [[ "$URL" =~ "bitbucket" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "kernel" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "archlinux" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "gnu" ]];then
+    ICON=" "
+elif [[ "$URL" =~ "git" ]];then
+    ICON=" "
+else
+    ICON=" "
+    URL="localhost"
+fi
+
+for PATTERN in "https" "http" "git" "://" "@"; do
+    [[ "$URL" == "$PATTERN"* ]] && URL="${URL##$PATTERN}"
+done
+
+for PATTERN in "/" ".git"; do
+    [[ "$URL" == *"$PATTERN" ]] && URL="${URL%%$PATTERN}"
+done
+printf "%s%s" "$ICON" "$URL"
+"""
+directories = [".git"]
+when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+shell = ["bash","--norc","--noprofile"]
+style = 'color1 bold'
+format = 'at [$output]($style)'
+
+[git_branch]
+format = ":[$symbol$branch]($style) "
+symbol = ""
+truncation_symbol = "..."
+
+[git_commit]
+tag_symbol = " tag "
+
+[git_status]
+ahead = ">"
+behind = "<"
+diverged = "<>"
+renamed = "r"
+deleted = "x"
+
+[aws]
+symbol = "aws "
+
+[azure]
+symbol = "az "
+
+[battery]
+full_symbol = "full "
+charging_symbol = "chg "
+discharging_symbol = "bat "
+unknown_symbol = "unk "
+empty_symbol = "emp "
+
+[buf]
+symbol = "buf "
+
+[bun]
+symbol = "bun "
+
+[c]
+symbol = "C "
+
+[character]
+success_symbol = "[❯](color8)"
+error_symbol = "[❯](error)"
+
+[cmake]
+symbol = "cmake "
+
+[cobol]
+symbol = "cobol "
+
+[conda]
+symbol = "conda "
+
+[container]
+symbol = "ctr "
+
+[cpp]
+symbol = "C++ "
+
+[crystal]
+symbol = "crystal "
+
+[custom.vala]
+description = "Shows the Vala version in Vala projects"
+command = "valac --version | head -n 1 | cut -d ' ' -f 2"
+shell = ["sh", "--norc", "--noprofile"]
+detect_extensions = ["vala"]
+detect_files = ["*.vala"]
+format = "via [$symbol]($style) "
+symbol = "vala "
+style = "bold blue"
+disabled = false
+
+[daml]
+symbol = "daml "
+
+[dart]
+symbol = "dart "
+
+[deno]
+symbol = "deno "
+
+[directory]
+read_only = " (read-only)"
+truncation_length = 6
+truncation_symbol = "󰦩 "
+fish_style_pwd_dir_length = 0
+
+[docker_context]
+symbol = "docker "
+
+[dotnet]
+format = "via [$symbol($version )(target $tfm )]($style)"
+symbol = ".NET "
+
+[elixir]
+symbol = "elx "
+detect_extensions = ["ex", "exs"]
+
+[elm]
+symbol = "elm "
+
+[erlang]
+symbol = "erl "
+detect_extensions = ["erl", "hrl"]
+
+[fennel]
+symbol = "fnl "
+
+[fortran]
+symbol = "ftn "
+
+[fossil_branch]
+symbol = "fsl "
+truncation_symbol = "..."
+
+[gcloud]
+symbol = "gcp "
+
+[gleam]
+symbol = "gleam "
+
+[golang]
+symbol = "go "
+
+[gradle]
+symbol = "gradle "
+
+[guix_shell]
+symbol = "guix "
+
+[haskell]
+symbol = "hs "
+
+[haxe]
+symbol = "hx "
+
+[helm]
+symbol = "helm "
+
+[hg_branch]
+symbol = "hg "
+truncation_symbol = "..."
+
+[hostname]
+ssh_symbol = "ssh "
+
+[java]
+symbol = "java "
+
+[jobs]
+symbol = "jobs "
+
+[julia]
+symbol = "jl "
+
+[kotlin]
+symbol = "kt "
+
+[kubernetes]
+symbol = "k8s "
+
+[lua]
+symbol = "lua "
+
+[memory_usage]
+symbol = "mem "
+
+[meson]
+symbol = "meson "
+truncation_symbol = "..."
+
+[mojo]
+symbol = "mojo "
+
+[nats]
+symbol = "nats "
+
+[netns]
+symbol = "netns "
+
+[nim]
+symbol = "nim "
+
+[nix_shell]
+symbol = "nix "
+
+[nodejs]
+symbol = "node "
+
+[ocaml]
+symbol = "ocaml "
+
+[odin]
+symbol = "odin "
+
+[opa]
+symbol = "opa "
+
+[openstack]
+symbol = "ostk "
+
+[package]
+symbol = "pkg "
+
+[perl]
+symbol = "perl "
+
+[php]
+symbol = "php "
+
+[pijul_channel]
+symbol = "pijul "
+truncation_symbol = "..."
+
+[pixi]
+symbol = "pixi "
+
+[pulumi]
+symbol = "pulumi "
+
+[purescript]
+symbol = "purs "
+
+[python]
+symbol = "py "
+
+[quarto]
+symbol = "quarto "
+
+[raku]
+symbol = "raku "
+
+[red]
+symbol = "red "
+
+[rlang]
+symbol = "r-lang "
+
+[ruby]
+symbol = "rb "
+
+[rust]
+symbol = "rs "
+
+[scala]
+symbol = "scala "
+
+[shlvl]
+symbol = "sh "
+
+[solidity]
+symbol = "sol "
+
+[spack]
+symbol = "spack "
+
+[status]
+symbol = "[x](bold red) "
+not_executable_symbol = "noexec"
+not_found_symbol = "notfound"
+sigint_symbol = "sigint"
+signal_symbol = "sig"
+
+[sudo]
+symbol = "sudo "
+
+[swift]
+symbol = "swift "
+
+[terraform]
+symbol = "tf "
+
+[typst]
+symbol = "typst "
+
+[vagrant]
+symbol = "vagrant "
+
+[vlang]
+symbol = "v-lang "
+
+[xmake]
+symbol = "xmake "
+
+[zig]
+symbol = "zig "

@@ -1,0 +1,77 @@
+# ~/.bash_profile - Sourced for login shells
+
+# Avoid recursion if sourced from .bashrc
+if [[ -z "$__SOURCING_BASHRC" ]]; then
+    if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+    fi
+fi
+
+# Guard environment loading to run once per shell session
+if [[ -z "$__BASH_ENV_LOADED" ]]; then
+    export __BASH_ENV_LOADED=1
+
+    # XDG Base Directory Specification
+    export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+    export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+    export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+    export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+    # Core Environment
+    export EDITOR="nvim"
+    export VISUAL="nvim"
+    export LC_ALL="en_US.UTF-8"
+    export MANPAGER="nvim +Man!"
+    export COLORTERM="truecolor"
+
+    # Compiler Optimizations
+    export CFLAGS="-march=native -O3 -pipe"
+    export CXXFLAGS="${CFLAGS}"
+
+    # Language & Toolchain Roots
+    export GOPATH="$HOME/.go"
+    export GOBIN="$GOPATH/bin"
+    export ODIN_ROOT="/opt/odin"
+    export VCACHE="/tmp/vmodules"
+
+    [[ -d "/opt/jdk" ]]     && export JAVA_HOME="/opt/jdk"
+    [[ -d "/opt/javafx" ]]  && export PATH_TO_FX="/opt/javafx/lib"
+    [[ -d "/opt/scala" ]]   && export SCALA_HOME="/opt/scala"
+    [[ -d "/opt/kotlinc" ]] && export KOTLIN_HOME="/opt/kotlinc"
+    [[ -d "/opt/vpkgs" ]]   && export XBPS_DISTDIR="/opt/vpkgs"
+
+    # pnpm setup
+    export PNPM_HOME="${XDG_DATA_HOME}/pnpm"
+    [[ -d "$PNPM_HOME/bin" ]] || mkdir -p "$PNPM_HOME/bin"
+
+    # Path helper to prepend directories to PATH (equivalent to Zsh's typeset -U path)
+    __path_add() {
+        local dir
+        for dir in "$@"; do
+            if [[ -d "$dir" ]]; then
+                # Deduplicate (remove existing occurrence to avoid duplicates)
+                PATH=":$PATH:"
+                PATH="${PATH//:$dir:/:}"
+                PATH="${PATH#:}"
+                PATH="${PATH%:}"
+                # Prepend
+                PATH="$dir${PATH:+:$PATH}"
+            fi
+        done
+    }
+
+    # Prepend paths cleanly with support for brace expansion
+    __path_add "$HOME/.local/share/mise/shims"
+    __path_add "$HOME/.local/bin"
+    __path_add "$GOBIN"
+    __path_add "$HOME"/.{bun,cabal,cargo,deno,ghcup,mint,pixi,flutter}/bin
+    __path_add "$HOME/.dotnet/tools"
+    __path_add "$HOME/.spicetify"
+    __path_add "$PNPM_HOME/bin"
+    [[ -n "$JAVA_HOME" ]]   && __path_add "$JAVA_HOME/bin"
+    [[ -n "$KOTLIN_HOME" ]] && __path_add "$KOTLIN_HOME/bin"
+    [[ -n "$JB_TOOLS" ]]    && __path_add "$JB_TOOLS/scripts"
+
+    unset -f __path_add
+    export PATH
+fi

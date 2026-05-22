@@ -1,0 +1,133 @@
+# Source profile and environment initializations
+# Functional helper to source a file if it exists
+source_if_exists() {
+  [[ -f "$1" ]] && source "$1"
+}
+
+source_if_exists ~/.profile
+source_if_exists ~/.zprofile
+
+# Startup & Performance
+# Asynchronously compile .zshrc in the background to not block shell startup
+() {
+  if [[ ~/.zshrc -nt ~/.zshrc.zwc ]]; then
+    zcompile ~/.zshrc &!
+  fi
+}
+
+# Compiler Optimizations
+export CFLAGS="-march=native -O3 -pipe"
+export CXXFLAGS="${CFLAGS}"
+
+# General Options
+setopt autocd correct extendedglob globdots
+
+# History Settings
+HISTFILE="$HOME/.local/state/zshist"
+HISTSIZE=10000
+SAVEHIST=10000
+[[ -d "${HISTFILE:h}" ]] || command mkdir -p "${HISTFILE:h}"
+setopt appendhistory sharehistory hist_ignore_dups hist_ignore_space hist_expire_dups_first
+
+# Completion System & Plugins Setup
+() {
+  local plugin_dir="$HOME/.zsh/plugins"
+  
+  # Declarative map of plugin paths to their git clone repositories
+  local -A plugins=(
+    "fzf-tab/fzf-tab.zsh"                           "https://github.com/Aloxaf/fzf-tab"
+    "zsh-autosuggestions/zsh-autosuggestions.zsh"   "https://github.com/zsh-users/zsh-autosuggestions"
+    "zsh-history-substring-search/zsh-history-substring-search.zsh" "https://github.com/zsh-users/zsh-history-substring-search"
+    "zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" "https://github.com/zsh-users/zsh-syntax-highlighting"
+    "zsh-completions"                               "https://github.com/zsh-users/zsh-completions"
+  )
+
+  # Auto-clone any missing plugin/completion directories
+  local rel_path repo_url target_dir
+  for rel_path repo_url in ${(kv)plugins}; do
+    if [[ "$rel_path" == *"/"* ]]; then
+      target_dir="$plugin_dir/${rel_path%/*}"
+    else
+      target_dir="$plugin_dir/$rel_path"
+    fi
+
+    if [[ ! -d "$target_dir" ]]; then
+      echo "Installing plugin ${target_dir:t}..."
+      git clone --depth 1 "$repo_url" "$target_dir"
+    fi
+  done
+
+  # Configure fpath for completions (ensuring unique paths)
+  typeset -g -aU fpath
+  fpath=(
+    "$plugin_dir/zsh-completions/src"
+    "$HOME/.zsh/completions"
+    $fpath
+  )
+
+  # Initialize completion system with caching (only regenerate once a day)
+  local zcompdump="/tmp/zcompdump-$USER"
+  if [[ -f "$zcompdump" && -z "$zcompdump"(#qN.m+1) ]]; then
+    autoload -Uz compinit && compinit -C -d "$zcompdump"
+  else
+    autoload -Uz compinit && compinit -d "$zcompdump"
+  fi
+}
+
+# Completion Refinements
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' group-name ''
+
+# Prompt Setup
+PROMPT='%F{4}%~%f
+%F{6}❯%f '
+
+source_if_exists ~/.zsh/custom/prompt.zsh
+
+# General Aliases
+alias v='nvim' \
+      vi='nvim' \
+      vim='nvim' \
+      nv='nvim' \
+      zshconfig="v ~/.zshrc" \
+      ls='eza --color=always --group-directories-first --icons=always' \
+      ff='fastfetch' \
+      neofetch='fastfetch -c neofetch' \
+      nf='neofetch' \
+      xrm='sudo xbps-remove -ROof' \
+      xin='sudo xbps-install -Suv' \
+      zhistclear='truncate -s 0 $HISTFILE && fc -R'
+
+# Plugins
+() {
+  local plugin_dir="$HOME/.zsh/plugins"
+  local -a plugins_to_load=(
+    "fzf-tab/fzf-tab.zsh"
+    "zsh-autosuggestions/zsh-autosuggestions.zsh"
+    "zsh-history-substring-search/zsh-history-substring-search.zsh"
+    "zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  )
+
+  local p
+  for p in "${plugins_to_load[@]}"; do
+    source_if_exists "$plugin_dir/$p"
+  done
+}
+
+# Keybindings
+bindkey -e
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^W' backward-kill-word
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+
+# Tool Initializations
+source_if_exists /usr/share/zsh/plugins/xbps-command-not-found/xbps-command-not-found.zsh
+
+# Zoxide: a smarter cd command (z)
+eval "$(zoxide init zsh)"
+

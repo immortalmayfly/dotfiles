@@ -1,0 +1,228 @@
+[config]
+prefer = "darkness"
+version_check = true
+
+[config.custom_colors]
+blue   = { color = "#89b4fa", blend = true }
+cyan   = { color = "#8aacab", blend = true }
+green  = { color = "#a6e3a1", blend = true }
+orange = { color = "#fab387", blend = true }
+purple = { color = "#cba6f7", blend = true }
+red    = { color = "#f38ba8", blend = true }
+yellow = { color = "#f9e2af", blend = true }
+
+[config.wallpaper]
+command = "awww img --transition-type center {{ image }} && wp-magick"
+set = true
+
+### TEMPLATES ###
+
+# [templates.alacritty]
+# input_path  = "~/.config/matugen/templates/alacritty.toml"
+# output_path = "~/.config/alacritty/themes/matugen.toml"
+
+# [templates.avizo]
+# input_path  = "~/.config/matugen/templates/avizo.ini"
+# output_path = "~/.config/avizo/config.ini"
+
+# [templates.bat]
+# input_path  = "~/.config/matugen/templates/bat.tmTheme"
+# output_path = "~/.config/bat/themes/matugen.tmTheme"
+# post_hook   = "command -v bat &> /dev/null && bat cache --build >/dev/null 2>&1"
+
+[templates.btop]
+input_path  = "~/.config/matugen/templates/btop.theme"
+output_path = "~/.config/btop/themes/matugen.theme"
+post_hook   = "command -v btop &>/dev/null && pgrep -x btop >/dev/null && pkill -USR2 -x btop || true"
+
+[templates.cava]
+input_path  = "~/.config/matugen/templates/cava.ini"
+output_path = "~/.config/cava/config"
+
+[templates.clipse]
+input_path  = "~/.config/matugen/templates/clipse.json"
+output_path = "~/.config/clipse/themes/matugen.json"
+
+# [templates.fish]
+# input_path  = "~/.config/matugen/templates/fish.theme"
+# output_path = "~/.config/fish/themes/matugen.theme"
+# post_hook   = "command -v fish &> /dev/null && fish -c 'fish_config theme choose matugen'"
+
+[templates.foot]
+input_path  = "~/.config/matugen/templates/foot"
+output_path = "~/.config/foot/themes/matugen"
+
+[templates.ghostty]
+input_path  = "~/.config/matugen/templates/ghostty"
+output_path = "~/.config/ghostty/themes/matugen"
+post_hook   = "pgrep -x ghostty >/dev/null && killall -SIGUSR2 ghostty || true"
+
+# [templates.gofer]
+# input_path  = "~/.config/matugen/templates/gofer.toml"
+# output_path = "~/.config/gofer/config.toml"
+
+[templates.gtk3]
+input_path  = "~/.config/matugen/templates/gtk.css"
+output_path = "~/.config/gtk-3.0/gtk.css"
+
+[templates.gtk4]
+input_path  = "~/.config/matugen/templates/gtk.css"
+output_path = "~/.config/gtk-4.0/gtk.css"
+post_hook   = "bash -c ~/.config/matugen/scripts/gtk-themes-reload.sh"
+
+[templates.gtklock]
+input_path  = "~/.config/matugen/templates/colors.css"
+output_path = "~/.config/gtklock/matugen.css"
+
+[templates.imv]
+input_path  = "~/.config/matugen/templates/imv"
+output_path = "~/.config/imv/config"
+
+# [templates.kcolorscheme]
+# input_path  = "~/.config/matugen/templates/kcolorscheme.colors"
+# output_path = "~/.local/share/color-schemes/matugen.colors"
+
+[templates.kitty]
+input_path  = "~/.config/matugen/templates/kitty.conf"
+output_path = "~/.config/kitty/themes/matugen.conf"
+post_hook   = "pgrep -x kitty >/dev/null && kitty +kitten themes --reload-in=all matugen && killall -SIGUSR1 kitty || true"
+
+[templates.kvconfig]
+input_path  = "~/.config/matugen/templates/kvantum/kvantum.kvconfig"
+output_path = "~/.config/Kvantum/matugen/matugen.kvconfig"
+post_hook   = "command -v kvantummanager >/dev/null && kvantummanager --set matugen"
+
+[templates.kvsvg]
+input_path  = "~/.config/matugen/templates/kvantum/kvantum.svg"
+output_path = "~/.config/Kvantum/matugen/matugen.svg"
+post_hook   = "command -v kvantummanager >/dev/null && kvantummanager --set matugen"
+
+[templates.lastwall]
+input_path  = "~/.config/matugen/templates/lastwall"
+output_path = "~/.local/state/matugen/lastwall"
+
+[templates.mako]
+input_path  = "~/.config/matugen/templates/mako"
+output_path = "~/.config/mako/config"
+post_hook   = "makoctl reload"
+
+[templates.mangl]
+input_path  = "~/.config/matugen/templates/mangl"
+output_path = "~/.manglrc"
+
+# [templates.mangowc]
+# input_path  = "~/.config/matugen/templates/mango.conf"
+# output_path = "~/.config/mango/colors.conf"
+# post_hook   = "mmsg -d reload_config"
+
+[templates.neovim]
+input_path  = "~/.config/matugen/templates/nvim.lua"
+output_path = "~/.config/nvim/lua/themes/matugen.lua"
+post_hook   = "pkill -SIGUSR1 nvim || true"
+
+[templates.niri]
+input_path  = "~/.config/matugen/templates/niri.kdl"
+output_path = "~/.config/niri/matugen.kdl"
+
+[templates.noctavox]
+input_path  = "~/.config/matugen/templates/noctavox.toml"
+output_path = "~/.config/noctavox/themes/matugen.toml"
+
+[templates.obs]
+input_path  = "~/.config/matugen/templates/obs-studio.obt"
+output_path = "~/.var/app/com.obsproject.Studio/config/obs-studio/themes/matugen.obt"
+
+[templates.papirus-folders]
+input_path = "~/.config/matugen/templates/papirus-folders.toml"
+compare_to = "{{colors.primary.default.hex}}"
+colors_to_compare = [
+    { name = "cat-mocha-rosewater", color = "#f5e0dc" },
+    { name = "cat-mocha-flamingo", color = "#f2cdcd" },
+    { name = "cat-mocha-pink", color = "#f5c2e7" },
+    { name = "cat-mocha-mauve", color = "#cba6f7" },
+    { name = "cat-mocha-red", color = "#f38ba8" },
+    { name = "cat-mocha-maroon", color = "#eba0ac" },
+    { name = "cat-mocha-peach", color = "#fab387" },
+    { name = "cat-mocha-yellow", color = "#f9e2af" },
+    { name = "cat-mocha-green", color = "#a6e3a1" },
+    { name = "cat-mocha-teal", color = "#94e2d5" },
+    { name = "cat-mocha-sky", color = "#89dceb" },
+    { name = "cat-mocha-sapphire", color = "#74c7ec" },
+    { name = "cat-mocha-blue", color = "#89b4fa" },
+    { name = "cat-mocha-lavender", color = "#b4befe" },
+]
+post_hook  = "command -v papirus-folders >/dev/null && papirus-folders -C {{closest_color}} -t Papirus-Dark || true"
+
+[templates.pywalfox]
+input_path  = "~/.config/matugen/templates/colors.json"
+output_path = "~/.cache/wal/colors.json"
+post_hook   = "command -v pywalfox >/dev/null && pywalfox update || true"
+
+[templates.qt5ct]
+input_path = "~/.config/matugen/templates/qtct.conf"
+output_path = "~/.config/qt5ct/colors/matugen.conf"
+
+[templates.qt6ct]
+input_path  = "~/.config/matugen/templates/qtct.conf"
+output_path = "~/.config/qt6ct/colors/matugen.conf"
+
+[templates.rmpc]
+input_path  = "~/.config/matugen/templates/rmpc.ron"
+output_path = "~/.config/rmpc/themes/matugen.ron"
+
+[templates.rofi]
+input_path  = "~/.config/matugen/templates/rofi.rasi"
+output_path = "~/.config/rofi/matugen.rasi"
+
+[templates.spotify]
+input_path  = "~/.config/matugen/templates/spicetify.ini"
+output_path = "~/.config/spicetify/Themes/Sleek/color.ini"
+post_hook   = "spicetify apply"
+
+[templates.starship]
+input_path  = "~/.config/matugen/templates/starship.toml"
+output_path = "~/.config/starship.toml"
+
+# [templates.swaync]
+# input_path  = "~/.config/matugen/templates/swaync.css"
+# output_path = "~/.config/swaync/matugen.css"
+# post_hook   = "swaync-client -rs"
+
+[templates.swayosd]
+input_path  = "~/.config/matugen/templates/swayosd.css"
+output_path = "~/.config/swayosd/matugen.css"
+post_hook   = "~/.config/swayosd/restart-swayosd"
+
+[templates.userchrome]
+input_path  = "~/.config/matugen/templates/firefox-userchrome.css"
+output_path = "~/.local/state/matugen/firefox.css"
+
+[templates.waybar]
+input_path  = "~/.config/matugen/templates/colors.css"
+output_path = "~/.config/waybar/matugen.css"
+post_hook   = "command -v waybar >/dev/null && killall -SIGUSR2 waybar || true"
+
+# [templates.wezterm]
+# input_path  = "~/.config/matugen/templates/wezterm.toml"
+# output_path = "~/.config/wezterm/colors/matugen.toml"
+
+[templates.wlogout]
+input_path  = "~/.config/matugen/templates/colors.css"
+output_path = "~/.config/wlogout/matugen.css"
+
+[templates.yazi]
+input_path  = "~/.config/matugen/templates/yazi.toml"
+output_path = "~/.config/yazi/flavors/matugen.yazi/flavor.toml"
+
+[templates.zathura]
+input_path  = "~/.config/matugen/templates/zathura"
+output_path = "~/.config/zathura/zathurarc"
+
+# [templates.zed]
+# input_path  = "~/.config/matugen/templates/zed.json"
+# output_path = "~/.config/zed/themes/matugen.json"
+
+[templates.zellij]
+input_path  = "~/.config/matugen/templates/zellij.kdl"
+output_path = "~/.config/zellij/themes/matugen.kdl"
+post_hook   = "touch ~/.config/zellij/config.kdl"

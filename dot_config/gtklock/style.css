@@ -1,0 +1,23 @@
+@import url("matugen.css");
+
+window {
+  background-image: url("background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: @background;
+}
+
+#clock-label {
+  font-family: "Afacad";
+  font-size: 84px;
+  font-weight: bold;
+  color: @primary;
+}
+
+#date-label {
+  font-family: "Afacad Medium";
+  font-size: 24px;
+  color: @on_surface_variant;
+  margin-bottom: 20px;
+}

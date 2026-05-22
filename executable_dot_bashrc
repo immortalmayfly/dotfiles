@@ -1,0 +1,30 @@
+# ~/.bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# Source environment variables if they haven't been loaded yet (Zsh-like fallback)
+if [[ -z "$__BASH_ENV_LOADED" ]]; then
+    export __SOURCING_BASHRC=1
+    if [ -f ~/.bash_profile ]; then
+        . ~/.bash_profile
+    fi
+    unset __SOURCING_BASHRC
+fi
+
+# Source profile for shell-agnostic initializations
+if [ -f ~/.profile ]; then 
+    . ~/.profile
+fi    
+
+# User specific environments, aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
